@@ -7,6 +7,7 @@ main :: proc() {
 
 	player_position := rl.Vector2{640, 320}
 	player_velocity: rl.Vector2
+	is_player_grounded: bool
 
 	for !rl.WindowShouldClose() {
 		rl.BeginDrawing()
@@ -25,8 +26,9 @@ main :: proc() {
 		}
 
 		// Jump
-		if rl.IsKeyDown(.SPACE) {
+		if is_player_grounded && rl.IsKeyDown(.SPACE) {
 			player_velocity.y = -600
+			is_player_grounded = false
 		}
 
 		player_position += player_velocity * rl.GetFrameTime()
@@ -34,6 +36,7 @@ main :: proc() {
 		ground_level := f32(rl.GetScreenHeight()) - 64
 		if player_position.y > ground_level {
 			player_position.y = ground_level
+			is_player_grounded = true
 		}
 
 		// Player
