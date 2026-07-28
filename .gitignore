@@ -1,0 +1,30 @@
+# Odin build output
+/build/
+/bin/
+/out/
+/dist/
+
+# Compiled binaries and libraries
+*.exe
+*.dll
+*.so
+*.dylib
+*.o
+*.obj
+*.a
+*.lib
+*.pdb
+*.dSYM/
+
+# Project executable
+/odin_tutorial_game
+/odin-tutorial-game
+
+# OS files
+.DS_Store
+
+# Editor files
+.idea/
+.vscode/
+*.swp
+*.swo
