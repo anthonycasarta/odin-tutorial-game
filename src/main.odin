@@ -9,14 +9,9 @@ main :: proc() {
 
 	rl.InitWindow(1280, 720, "Odin Tutorial Game")
 	defer rl.CloseWindow()
-
 	rl.SetWindowPosition(200, 200)
 	rl.SetWindowState({.WINDOW_RESIZABLE})
-
 	rl.SetTargetFPS(500)
-
-	player := player_init()
-	camera: Game_Camera
 
 	level: Level
 	level_load("assets/levels/level.json", &level)
@@ -25,8 +20,12 @@ main :: proc() {
 		level_destroy(&level)
 	}
 
+	player := player_init()
+	camera: Game_Camera
+	level_editor := Level_Editor {
+		enabled = false,
+	}
 
-	is_in_editing_mode := false
 	for !rl.WindowShouldClose() {
 		rl.BeginDrawing()
 		rl.ClearBackground(rl.BLUE)
@@ -38,23 +37,8 @@ main :: proc() {
 
 		player_draw(&player)
 		level_draw(&level)
+		level_editor_update(&level_editor, &level, &camera)
 
-		if rl.IsKeyPressed(.F2) {
-			is_in_editing_mode = !is_in_editing_mode
-		}
-
-		if is_in_editing_mode {
-			mouse_position := rl.GetScreenToWorld2D(rl.GetMousePosition(), camera.view)
-
-			rl.DrawRectangleV(mouse_position, {96, 16}, rl.WHITE)
-
-			if rl.IsMouseButtonPressed(.LEFT) {
-				level_add_platform_at(&level, mouse_position)
-			}
-			if rl.IsMouseButtonPressed(.RIGHT) {
-				level_remove_platform_at(&level, mouse_position)
-			}
-		}
 		rl.EndMode2D()
 		rl.EndDrawing()
 
