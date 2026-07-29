@@ -2,8 +2,6 @@
 package odin_tutorial_game
 
 import "core:encoding/json"
-import "core:fmt"
-import "core:mem"
 import "core:os"
 import rl "vendor:raylib"
 
@@ -19,19 +17,7 @@ platform_collider :: proc(position: rl.Vector2) -> rl.Rectangle {
 }
 
 main :: proc() {
-	track: mem.Tracking_Allocator
-	mem.tracking_allocator_init(&track, context.allocator)
-	context.allocator = mem.tracking_allocator(&track)
-
-	defer {
-		for _, entry in track.allocation_map {
-			fmt.eprintf("%v leaked %v bytes\n", entry.location, entry.size)
-		}
-		for entry in track.bad_free_array {
-			fmt.eprintf("%v bad free\n", entry.location)
-		}
-		mem.tracking_allocator_destroy(&track)
-	}
+	memory_allocator()
 
 	rl.InitWindow(1280, 720, "Odin Tutorial Game")
 	defer rl.CloseWindow()
