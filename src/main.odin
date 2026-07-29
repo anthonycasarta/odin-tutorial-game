@@ -35,6 +35,7 @@ main :: proc() {
 		platforms = {{-20, 20}, {90, -10}, {90, -50}},
 	}
 
+	is_in_editing_mode := false
 	for !rl.WindowShouldClose() {
 		rl.BeginDrawing()
 		rl.ClearBackground(rl.BLUE)
@@ -105,6 +106,28 @@ main :: proc() {
 		for platform in level.platforms {
 
 			rl.DrawRectangleRec(platform_collider(platform), rl.RED)
+		}
+
+		if rl.IsKeyPressed(.F2) {
+			is_in_editing_mode = !is_in_editing_mode
+		}
+
+		if is_in_editing_mode {
+			mouse_position := rl.GetScreenToWorld2D(rl.GetMousePosition(), camera)
+
+			rl.DrawRectangleV(mouse_position, {96, 16}, rl.WHITE)
+
+			if rl.IsMouseButtonPressed(.LEFT) {
+				append(&level.platforms, mouse_position)
+			}
+			if rl.IsMouseButtonPressed(.RIGHT) {
+				for position, index in level.platforms {
+					if rl.CheckCollisionPointRec(mouse_position, platform_collider(position)) {
+						unordered_remove(&level.platforms, index)
+						break
+					}
+				}
+			}
 		}
 		rl.EndMode2D()
 
