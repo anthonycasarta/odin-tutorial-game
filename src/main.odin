@@ -1,8 +1,10 @@
 #+feature dynamic-literals
 package odin_tutorial_game
 
+import "core:encoding/json"
 import "core:fmt"
 import "core:mem"
+import "core:os"
 import rl "vendor:raylib"
 
 PIXEL_WINDOW_HEIGHT :: 180
@@ -49,11 +51,26 @@ main :: proc() {
 	player_origin := rl.Vector2{player_width / 2, player_height}
 	is_player_grounded: bool
 
-	level := Level {
-		platforms = {{-20, 20}, {90, -10}, {90, -50}},
-	}
-	defer delete(level.platforms)
+	level: Level
 
+	if level_data, err := os.read_entire_file("assets/levels/level.json", context.temp_allocator);
+	   err == nil {
+		if json.unmarshal(level_data, &level) != nil {
+			append(&level.platforms, rl.Vector2{-20, 20})
+		}
+	} else {
+		append(&level.platforms, rl.Vector2{-20, 20})
+
+	}
+
+	defer {
+		if level_data, error := json.marshal(level, allocator = context.temp_allocator);
+		   error == nil {
+			_ = os.write_entire_file("assets/levels/level.json", level_data)
+		}
+		free_all(context.temp_allocator)
+		delete(level.platforms)
+	}
 	is_in_editing_mode := false
 	for !rl.WindowShouldClose() {
 		rl.BeginDrawing()
@@ -151,6 +168,9 @@ main :: proc() {
 		rl.EndMode2D()
 
 		rl.EndDrawing()
+
+		free_all(context.temp_allocator)
+
 	}
 
 }
