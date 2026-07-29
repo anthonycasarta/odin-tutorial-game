@@ -9,6 +9,8 @@ main :: proc() {
 	rl.SetWindowPosition(200, 200)
 	rl.SetWindowState({.WINDOW_RESIZABLE})
 
+	rl.SetTargetFPS(500)
+
 	player_position := rl.Vector2{640, 320}
 	player_width := f32(32)
 	player_height := f32(32)
