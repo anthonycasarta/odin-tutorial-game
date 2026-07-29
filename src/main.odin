@@ -39,8 +39,21 @@ main :: proc() {
 			is_player_grounded = true
 		}
 
+
+		// Camera
+		camera := rl.Camera2D {
+			zoom   = 1,
+			offset = {f32(rl.GetScreenWidth() / 2), f32(rl.GetScreenHeight() / 2)},
+			target = player_position,
+		}
+
+		rl.BeginMode2D(camera)
+
 		// Player
 		rl.DrawRectangleV(player_position, {64, 64}, rl.ORANGE)
+
+		rl.EndMode2D()
+
 		rl.EndDrawing()
 	}
 
