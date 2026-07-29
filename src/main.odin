@@ -22,7 +22,7 @@ main :: proc() {
 	player_origin := rl.Vector2{player_width / 2, player_height}
 	is_player_grounded: bool
 
-	platform := rl.Rectangle{-20, 20, 96, 16}
+	platforms := []rl.Rectangle{{-20, 20, 96, 16}, {90, -10, 96, 16}}
 
 	for !rl.WindowShouldClose() {
 		rl.BeginDrawing()
@@ -56,10 +56,13 @@ main :: proc() {
 		}
 
 		is_player_grounded = false
-		if rl.CheckCollisionRecs(player_ground_collider, platform) && player_velocity.y > 0 {
-			player_velocity.y = 0
-			player_position.y = platform.y
-			is_player_grounded = true
+		for platform in platforms {
+
+			if rl.CheckCollisionRecs(player_ground_collider, platform) && player_velocity.y > 0 {
+				player_velocity.y = 0
+				player_position.y = platform.y
+				is_player_grounded = true
+			}
 		}
 
 		// Sync player position
@@ -87,7 +90,10 @@ main :: proc() {
 		rl.DrawCircleV(rl.Vector2{player.x, player.y}, player_width / 4, rl.BLUE)
 
 		// Platform
-		rl.DrawRectangleRec(platform, rl.RED)
+		for platform in platforms {
+
+			rl.DrawRectangleRec(platform, rl.RED)
+		}
 		rl.EndMode2D()
 
 		rl.EndDrawing()
