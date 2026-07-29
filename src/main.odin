@@ -1,9 +1,18 @@
+#+feature dynamic-literals
 package odin_tutorial_game
 
 import rl "vendor:raylib"
 
 PIXEL_WINDOW_HEIGHT :: 180
 PLAYER_SPEED :: 100
+
+Level :: struct {
+	platforms: [dynamic]rl.Vector2,
+}
+
+platform_collider :: proc(position: rl.Vector2) -> rl.Rectangle {
+	return {position.x, position.y, 96, 16}
+}
 
 main :: proc() {
 	rl.InitWindow(1280, 720, "Odin Tutorial Game")
@@ -22,7 +31,9 @@ main :: proc() {
 	player_origin := rl.Vector2{player_width / 2, player_height}
 	is_player_grounded: bool
 
-	platforms := []rl.Rectangle{{-20, 20, 96, 16}, {90, -10, 96, 16}}
+	level := Level {
+		platforms = {{-20, 20}, {90, -10}, {90, -50}},
+	}
 
 	for !rl.WindowShouldClose() {
 		rl.BeginDrawing()
@@ -56,9 +67,10 @@ main :: proc() {
 		}
 
 		is_player_grounded = false
-		for platform in platforms {
+		for platform in level.platforms {
 
-			if rl.CheckCollisionRecs(player_ground_collider, platform) && player_velocity.y > 0 {
+			if rl.CheckCollisionRecs(player_ground_collider, platform_collider(platform)) &&
+			   player_velocity.y > 0 {
 				player_velocity.y = 0
 				player_position.y = platform.y
 				is_player_grounded = true
@@ -90,9 +102,9 @@ main :: proc() {
 		rl.DrawCircleV(rl.Vector2{player.x, player.y}, player_width / 4, rl.BLUE)
 
 		// Platform
-		for platform in platforms {
+		for platform in level.platforms {
 
-			rl.DrawRectangleRec(platform, rl.RED)
+			rl.DrawRectangleRec(platform_collider(platform), rl.RED)
 		}
 		rl.EndMode2D()
 
