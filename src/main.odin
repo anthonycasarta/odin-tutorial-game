@@ -1,6 +1,8 @@
 #+feature dynamic-literals
 package odin_tutorial_game
 
+import "core:fmt"
+import "core:mem"
 import rl "vendor:raylib"
 
 PIXEL_WINDOW_HEIGHT :: 180
@@ -15,7 +17,23 @@ platform_collider :: proc(position: rl.Vector2) -> rl.Rectangle {
 }
 
 main :: proc() {
+	track: mem.Tracking_Allocator
+	mem.tracking_allocator_init(&track, context.allocator)
+	context.allocator = mem.tracking_allocator(&track)
+
+	defer {
+		for _, entry in track.allocation_map {
+			fmt.eprintf("%v leaked %v bytes\n", entry.location, entry.size)
+		}
+		for entry in track.bad_free_array {
+			fmt.eprintf("%v bad free\n", entry.location)
+		}
+		mem.tracking_allocator_destroy(&track)
+	}
+
 	rl.InitWindow(1280, 720, "Odin Tutorial Game")
+	defer rl.CloseWindow()
+
 	rl.SetWindowPosition(200, 200)
 	rl.SetWindowState({.WINDOW_RESIZABLE})
 
@@ -34,6 +52,7 @@ main :: proc() {
 	level := Level {
 		platforms = {{-20, 20}, {90, -10}, {90, -50}},
 	}
+	defer delete(level.platforms)
 
 	is_in_editing_mode := false
 	for !rl.WindowShouldClose() {
@@ -134,5 +153,4 @@ main :: proc() {
 		rl.EndDrawing()
 	}
 
-	rl.CloseWindow()
 }
