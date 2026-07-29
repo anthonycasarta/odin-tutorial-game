@@ -2,7 +2,8 @@ package odin_tutorial_game
 
 import rl "vendor:raylib"
 
-PIXEL_WINDOW_HEIGHT :: 720
+PIXEL_WINDOW_HEIGHT :: 180
+PLAYER_SPEED :: 100
 
 main :: proc() {
 	rl.InitWindow(1280, 720, "Odin Tutorial Game")
@@ -11,9 +12,9 @@ main :: proc() {
 
 	rl.SetTargetFPS(500)
 
-	player_position := rl.Vector2{640, 320}
-	player_width := f32(32)
-	player_height := f32(32)
+	player_position: rl.Vector2
+	player_width := f32(8)
+	player_height := f32(8)
 	player_rotation: f32
 	player_velocity: rl.Vector2
 
@@ -21,36 +22,46 @@ main :: proc() {
 	player_origin := rl.Vector2{player_width / 2, player_height}
 	is_player_grounded: bool
 
+	platform := rl.Rectangle{-20, 20, 96, 16}
+
 	for !rl.WindowShouldClose() {
 		rl.BeginDrawing()
 		rl.ClearBackground(rl.BLUE)
 
 		// Gravity
-		player_velocity.y += 2000 * rl.GetFrameTime()
+		player_velocity.y += 1000 * rl.GetFrameTime()
 
 		// Movement
 		if rl.IsKeyDown(.A) {
-			player_velocity.x = -400
+			player_velocity.x = -PLAYER_SPEED
 		} else if rl.IsKeyDown(.D) {
-			player_velocity.x = 400
+			player_velocity.x = PLAYER_SPEED
 		} else {
 			player_velocity.x = 0
 		}
 
 		// Jump
 		if is_player_grounded && rl.IsKeyPressed(.SPACE) {
-			player_velocity.y = -600
-			is_player_grounded = false
+			player_velocity.y = -300
 		}
 
 		player_position += player_velocity * rl.GetFrameTime()
 
 		// Ground check
-		ground_level := f32(rl.GetScreenHeight()) - player_height
-		if player_position.y > ground_level {
-			player_position.y = ground_level
+		player_ground_collider := rl.Rectangle {
+			player_position.x - player_width / 4,
+			player_position.y - player_height / 4,
+			player_width / 2,
+			player_height / 4,
+		}
+
+		is_player_grounded = false
+		if rl.CheckCollisionRecs(player_ground_collider, platform) && player_velocity.y > 0 {
+			player_velocity.y = 0
+			player_position.y = platform.y
 			is_player_grounded = true
 		}
+
 		// Sync player position
 		player.x = player_position.x
 		player.y = player_position.y
@@ -68,7 +79,15 @@ main :: proc() {
 
 		// Player
 		rl.DrawRectanglePro(player, player_origin, player_rotation, rl.ORANGE)
-		rl.DrawCircleV(rl.Vector2{player.x, player.y}, 5, rl.BLUE)
+
+		// Player ground collider
+		rl.DrawRectangleRec(player_ground_collider, rl.GREEN)
+
+		// Player origin
+		rl.DrawCircleV(rl.Vector2{player.x, player.y}, player_width / 4, rl.BLUE)
+
+		// Platform
+		rl.DrawRectangleRec(platform, rl.RED)
 		rl.EndMode2D()
 
 		rl.EndDrawing()
