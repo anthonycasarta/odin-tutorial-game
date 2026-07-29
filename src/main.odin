@@ -5,8 +5,6 @@ import "core:encoding/json"
 import "core:os"
 import rl "vendor:raylib"
 
-PIXEL_WINDOW_HEIGHT :: 180
-PLAYER_SPEED :: 100
 
 Level :: struct {
 	platforms: [dynamic]rl.Vector2,
@@ -28,6 +26,7 @@ main :: proc() {
 	rl.SetTargetFPS(500)
 
 	player := player_init()
+	camera := Game_Camera{}
 
 	level: Level
 
@@ -56,16 +55,13 @@ main :: proc() {
 
 		player_update(&player, &level, rl.GetFrameTime())
 
-		screen_height := f32(rl.GetScreenHeight())
 
-		// Camera
-		camera := rl.Camera2D {
-			zoom   = screen_height / PIXEL_WINDOW_HEIGHT,
-			offset = {f32(rl.GetScreenWidth() / 2), f32(rl.GetScreenHeight() / 2)},
-			target = player.position,
-		}
+		camera_update(&player, &camera)
 
-		rl.BeginMode2D(camera)
+		// player.x = player_position.x
+		// player.y = player_position.y
+
+		rl.BeginMode2D(camera.view)
 
 		player_draw(&player)
 		// Platform
@@ -79,7 +75,7 @@ main :: proc() {
 		}
 
 		if is_in_editing_mode {
-			mouse_position := rl.GetScreenToWorld2D(rl.GetMousePosition(), camera)
+			mouse_position := rl.GetScreenToWorld2D(rl.GetMousePosition(), camera.view)
 
 			rl.DrawRectangleV(mouse_position, {96, 16}, rl.WHITE)
 
