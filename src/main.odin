@@ -6,7 +6,13 @@ main :: proc() {
 	rl.InitWindow(1280, 720, "Odin Tutorial Game")
 
 	player_position := rl.Vector2{640, 320}
+	player_width := f32(64)
+	player_height := f32(64)
+	player_rotation: f32
 	player_velocity: rl.Vector2
+
+	player := rl.Rectangle{player_position.x, player_position.y, player_width, player_height}
+	player_origin := rl.Vector2{player_width / 2, player_height}
 	is_player_grounded: bool
 
 	for !rl.WindowShouldClose() {
@@ -26,7 +32,7 @@ main :: proc() {
 		}
 
 		// Jump
-		if is_player_grounded && rl.IsKeyDown(.SPACE) {
+		if is_player_grounded && rl.IsKeyPressed(.SPACE) {
 			player_velocity.y = -600
 			is_player_grounded = false
 		}
@@ -38,6 +44,8 @@ main :: proc() {
 			player_position.y = ground_level
 			is_player_grounded = true
 		}
+		player.x = player_position.x
+		player.y = player_position.y
 
 
 		// Camera
@@ -50,8 +58,8 @@ main :: proc() {
 		rl.BeginMode2D(camera)
 
 		// Player
-		rl.DrawRectangleV(player_position, {64, 64}, rl.ORANGE)
-
+		rl.DrawRectanglePro(player, player_origin, player_rotation, rl.ORANGE)
+		rl.DrawCircleV(rl.Vector2{player.x, player.y}, 5, rl.BLUE)
 		rl.EndMode2D()
 
 		rl.EndDrawing()
