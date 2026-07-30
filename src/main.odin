@@ -16,7 +16,7 @@ main :: proc() {
 	game := game_init()
 	defer game_destroy(&game)
 
-	for !rl.WindowShouldClose() {
+	for !rl.WindowShouldClose() && !game.player.is_dead {
 		rl.BeginDrawing()
 
 		rl.ClearBackground(rl.BLUE)

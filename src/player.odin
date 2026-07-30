@@ -9,10 +9,14 @@ Player :: struct {
 	width:           f32,
 	height:          f32,
 	rotation:        f32,
+	left:            f32,
+	right:           f32,
+	bottom:          f32,
 	rectangle:       rl.Rectangle,
 	origin:          rl.Vector2,
 	ground_collider: rl.Rectangle,
 	is_grounded:     bool,
+	is_dead:         bool,
 }
 
 player_init :: proc() -> Player {
@@ -44,16 +48,36 @@ player_draw :: proc(player: ^Player) {
 }
 
 player_update :: proc(player: ^Player, level: ^Level, delta_time: f32) {
-	// Gravity
-	player.velocity.y += 1000 * delta_time
+	player.left = player.position.x - (player.width / 2)
+	player.right = player.position.x + (player.width / 2)
+	player.bottom = player.position.y
 
-	// Movement
-	if rl.IsKeyDown(.A) {
-		player.velocity.x = -player.speed
-	} else if rl.IsKeyDown(.D) {
-		player.velocity.x = player.speed
-	} else {
+	// Gravity
+	if !player.is_dead {
+		player.velocity.y += 1000 * delta_time
+
+
+		// Movement
+		if rl.IsKeyDown(.A) {
+			player.velocity.x = -player.speed
+		} else if rl.IsKeyDown(.D) {
+			player.velocity.x = player.speed
+		} else {
+			player.velocity.x = 0
+		}
+	}
+
+	if player.left < level.bounds.x {
 		player.velocity.x = 0
+		player.position.x = level.bounds.x + player.width / 2
+	}
+	if player.right > level.bounds.x + level.bounds.width {
+		player.velocity.x = 0
+		player.position.x = level.bounds.x + level.bounds.width - player.width / 2
+	}
+	if player.bottom > level.bounds.y + level.bounds.height {
+		player.velocity = 0
+		player.is_dead = true
 	}
 
 	// Jump
@@ -77,10 +101,17 @@ player_update :: proc(player: ^Player, level: ^Level, delta_time: f32) {
 		if rl.CheckCollisionRecs(player.ground_collider, platform_collider(platform)) &&
 		   player.velocity.y > 0 {
 			player.velocity.y = 0
-			player.position.y = platform.y
+			player.position.y = platform.position.y
 			player.is_grounded = true
 		}
 	}
+
+
+	// if rl.CheckCollisionRecs(player.ground_collider, level.bounds) {
+	// 	player.velocity = 0
+	// 	player.position.x = level.bounds.x
+	// 	player.position.y = level.bounds.y
+	// }
 	// Sync player position
 	player.rectangle = {player.position.x, player.position.y, player.width, player.height}
 }
