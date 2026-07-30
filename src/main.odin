@@ -18,10 +18,11 @@ main :: proc() {
 
 	for !rl.WindowShouldClose() {
 		rl.BeginDrawing()
-		rl.ClearBackground(rl.BLUE)
 
+		rl.ClearBackground(rl.BLUE)
 		game_update(&game, rl.GetFrameTime())
 		game_draw(&game)
+
 		rl.EndDrawing()
 		free_all(context.temp_allocator)
 
