@@ -16,6 +16,7 @@ Player :: struct {
 	origin:          rl.Vector2,
 	ground_collider: rl.Rectangle,
 	is_grounded:     bool,
+	is_dead:         bool,
 }
 
 player_init :: proc() -> Player {
@@ -47,20 +48,23 @@ player_draw :: proc(player: ^Player) {
 }
 
 player_update :: proc(player: ^Player, level: ^Level, delta_time: f32) {
-	// Gravity
-	player.velocity.y += 1000 * delta_time
-
 	player.left = player.position.x - (player.width / 2)
 	player.right = player.position.x + (player.width / 2)
 	player.bottom = player.position.y
 
-	// Movement
-	if rl.IsKeyDown(.A) {
-		player.velocity.x = -player.speed
-	} else if rl.IsKeyDown(.D) {
-		player.velocity.x = player.speed
-	} else {
-		player.velocity.x = 0
+	// Gravity
+	if !player.is_dead {
+		player.velocity.y += 1000 * delta_time
+
+
+		// Movement
+		if rl.IsKeyDown(.A) {
+			player.velocity.x = -player.speed
+		} else if rl.IsKeyDown(.D) {
+			player.velocity.x = player.speed
+		} else {
+			player.velocity.x = 0
+		}
 	}
 
 	if player.left < level.bounds.x {
@@ -70,6 +74,10 @@ player_update :: proc(player: ^Player, level: ^Level, delta_time: f32) {
 	if player.right > level.bounds.x + level.bounds.width {
 		player.velocity.x = 0
 		player.position.x = level.bounds.x + level.bounds.width - player.width / 2
+	}
+	if player.bottom > level.bounds.y + level.bounds.height {
+		player.velocity = 0
+		player.is_dead = true
 	}
 
 	// Jump

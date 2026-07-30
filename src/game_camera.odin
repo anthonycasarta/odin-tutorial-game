@@ -23,5 +23,4 @@ camera_update :: proc(player: ^Player, camera: ^Game_Camera, level: ^Level) {
 		level.bounds.x + visible_distance_left,
 		(level.bounds.x + level.bounds.width) - visible_distance_right,
 	)
-
 }
