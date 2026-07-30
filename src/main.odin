@@ -13,31 +13,23 @@ main :: proc() {
 	rl.SetWindowState({.WINDOW_RESIZABLE})
 	rl.SetTargetFPS(500)
 
-	level: Level
-	level_load("assets/levels/level.json", &level)
+	game := game_init()
 	defer {
-		level_save("assets/levels/level.json", &level)
-		level_destroy(&level)
-	}
-
-	player := player_init()
-	camera: Game_Camera
-	level_editor := Level_Editor {
-		enabled = false,
+		level_save("assets/levels/level.json", &game.level)
+		level_destroy(&game.level)
 	}
 
 	for !rl.WindowShouldClose() {
 		rl.BeginDrawing()
 		rl.ClearBackground(rl.BLUE)
 
-		player_update(&player, &level, rl.GetFrameTime())
-		camera_update(&player, &camera)
+		game_update(&game, rl.GetFrameTime())
 
-		rl.BeginMode2D(camera.view)
+		rl.BeginMode2D(game.camera.view)
 
-		player_draw(&player)
-		level_draw(&level)
-		level_editor_update(&level_editor, &level, &camera)
+		player_draw(&game.player)
+		level_draw(&game.level)
+		level_editor_update(&game.level_editor, &game.level, &game.camera)
 
 		rl.EndMode2D()
 		rl.EndDrawing()
