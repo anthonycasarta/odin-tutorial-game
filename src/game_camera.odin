@@ -14,7 +14,7 @@ camera_update :: proc(player: ^Player, camera: ^Game_Camera) {
 	pixel_window_height := f32(180)
 
 	camera.view.zoom = screen_height / pixel_window_height
-	camera.view.offset = {screen_width / 2, screen_height / 2}
-	camera.view.target = player.position
+	camera.view.offset = {screen_width / 2, screen_height * 0.85}
+	camera.view.target.x = player.position.x
 
 }

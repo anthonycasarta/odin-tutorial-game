@@ -7,6 +7,8 @@ import rl "vendor:raylib"
 
 Level :: struct {
 	platforms: [dynamic]rl.Vector2,
+	bounds:    rl.Rectangle,
+	origin:    rl.Vector2,
 }
 
 platform_collider :: proc(position: rl.Vector2) -> rl.Rectangle {
@@ -19,6 +21,8 @@ level_draw :: proc(level: ^Level) {
 
 		rl.DrawRectangleRec(platform_collider(platform), rl.RED)
 	}
+	rl.DrawRectangleLinesEx(level.bounds, f32(1), rl.YELLOW)
+
 
 }
 
