@@ -64,11 +64,11 @@ player_update :: proc(player: ^Player, level: ^Level, delta_time: f32) {
 	}
 
 	if player.left < level.bounds.x {
-		player.velocity = 0
+		player.velocity.x = 0
 		player.position.x = level.bounds.x + player.width / 2
 	}
 	if player.right > level.bounds.x + level.bounds.width {
-		player.velocity = 0
+		player.velocity.x = 0
 		player.position.x = level.bounds.x + level.bounds.width - player.width / 2
 	}
 
@@ -93,7 +93,7 @@ player_update :: proc(player: ^Player, level: ^Level, delta_time: f32) {
 		if rl.CheckCollisionRecs(player.ground_collider, platform_collider(platform)) &&
 		   player.velocity.y > 0 {
 			player.velocity.y = 0
-			player.position.y = platform.y
+			player.position.y = platform.position.y
 			player.is_grounded = true
 		}
 	}

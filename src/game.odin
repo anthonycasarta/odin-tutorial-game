@@ -57,5 +57,5 @@ game_draw :: proc(game: ^Game) {
 
 game_update :: proc(game: ^Game, delta_time: f32) {
 	player_update(&game.player, &game.level, delta_time)
-	camera_update(&game.player, &game.camera)
+	camera_update(&game.player, &game.camera, &game.level)
 }
