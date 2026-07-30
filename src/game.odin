@@ -2,7 +2,7 @@ package odin_tutorial_game
 
 import rl "vendor:raylib"
 
-level_paths := [?]string{"assets/levels/level.json"}
+level_paths := [?]string{"assets/levels/level_01.json"}
 
 
 Game :: struct {
@@ -15,7 +15,7 @@ Game :: struct {
 
 game_init :: proc() -> Game {
 	level: Level
-	level_load("assets/levels/level.json", &level)
+	level_load("assets/levels/level_01.json", &level)
 	return Game {
 		player = player_init(),
 		level = level,
