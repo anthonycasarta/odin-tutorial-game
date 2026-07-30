@@ -14,26 +14,15 @@ main :: proc() {
 	rl.SetTargetFPS(500)
 
 	game := game_init()
-	defer {
-		level_save("assets/levels/level.json", &game.level)
-		level_destroy(&game.level)
-	}
+	defer game_destroy(&game)
 
 	for !rl.WindowShouldClose() {
 		rl.BeginDrawing()
 		rl.ClearBackground(rl.BLUE)
 
 		game_update(&game, rl.GetFrameTime())
-
-		rl.BeginMode2D(game.camera.view)
-
-		player_draw(&game.player)
-		level_draw(&game.level)
-		level_editor_update(&game.level_editor, &game.level, &game.camera)
-
-		rl.EndMode2D()
+		game_draw(&game)
 		rl.EndDrawing()
-
 		free_all(context.temp_allocator)
 
 	}
