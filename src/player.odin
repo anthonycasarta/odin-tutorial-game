@@ -13,7 +13,7 @@ Player :: struct {
 	left:            f32,
 	right:           f32,
 	bottom:          f32,
-	rectangle:       rl.Rectangle,
+	sprite:          rl.Rectangle,
 	origin:          rl.Vector2,
 	ground_collider: rl.Rectangle,
 	state:           ps.Player_State,
@@ -32,14 +32,14 @@ player_init :: proc() -> Player {
 		speed = speed,
 		width = width,
 		height = height,
-		rectangle = {position.x, position.y, width, height},
+		sprite = {position.x, position.y, width, height},
 		origin = {width / 2, height},
 	}
 }
 
 player_draw :: proc(player: ^Player) {
 	// Player
-	rl.DrawRectanglePro(player.rectangle, player.origin, player.rotation, rl.ORANGE)
+	rl.DrawRectanglePro(player.sprite, player.origin, player.rotation, rl.ORANGE)
 
 	// Player ground collider
 	rl.DrawRectangleRec(player.ground_collider, rl.GREEN)
@@ -109,11 +109,6 @@ player_update :: proc(player: ^Player, level: ^Level, delta_time: f32) {
 	}
 
 
-	// if rl.CheckCollisionRecs(player.ground_collider, level.bounds) {
-	// 	player.velocity = 0
-	// 	player.position.x = level.bounds.x
-	// 	player.position.y = level.bounds.y
-	// }
 	// Sync player position
-	player.rectangle = {player.position.x, player.position.y, player.width, player.height}
+	player.sprite = {player.position.x, player.position.y, player.width, player.height}
 }
