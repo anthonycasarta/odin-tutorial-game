@@ -1,5 +1,6 @@
 package odin_tutorial_game
 
+import ps "player_states"
 import rl "vendor:raylib"
 
 Player :: struct {
@@ -15,6 +16,7 @@ Player :: struct {
 	rectangle:       rl.Rectangle,
 	origin:          rl.Vector2,
 	ground_collider: rl.Rectangle,
+	state:           ps.Player_State,
 	is_grounded:     bool,
 	is_dead:         bool,
 }
