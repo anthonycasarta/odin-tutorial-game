@@ -56,6 +56,8 @@ player_update :: proc(player: ^Player, level: ^lvl.Level, delta_time: f32) {
 	player.right = player.position.x + (player.width / 2)
 	player.bottom = player.position.y
 
+	state_machine_update(player)
+
 	// Gravity
 	if !player.is_dead {
 		player.velocity.y += 1000 * delta_time
