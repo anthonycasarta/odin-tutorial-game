@@ -1,17 +1,18 @@
-package odin_tutorial_game
+package level
 
+import plt "../platform"
 import "core:encoding/json"
 import "core:fmt"
 import "core:os"
 import rl "vendor:raylib"
 
 Level :: struct {
-	platforms: [dynamic]Platform,
+	platforms: [dynamic]plt.Platform,
 	bounds:    rl.Rectangle,
 	origin:    rl.Vector2,
 }
 
-platform_collider :: proc(platform: Platform) -> rl.Rectangle {
+platform_collider :: proc(platform: plt.Platform) -> rl.Rectangle {
 	return {platform.position.x, platform.position.y, platform.width, platform.height}
 }
 
@@ -27,7 +28,7 @@ level_draw :: proc(level: ^Level) {
 }
 
 level_add_platform_at :: proc(level: ^Level, position: rl.Vector2) {
-	append(&level.platforms, Platform{position = position, width = 96, height = 16})
+	append(&level.platforms, plt.Platform{position = position, width = 96, height = 16})
 
 }
 
@@ -58,10 +59,10 @@ level_save :: proc(file_path: string, level: ^Level) {
 level_load :: proc(file_path: string, level: ^Level) {
 	if level_data, err := os.read_entire_file(file_path, context.temp_allocator); err == nil {
 		if json.unmarshal(level_data, level) != nil {
-			append(&level.platforms, Platform{position = {-20, 20}})
+			append(&level.platforms, plt.Platform{position = {-20, 20}})
 		}
 	} else {
-		append(&level.platforms, Platform{position = {-20, 20}})
+		append(&level.platforms, plt.Platform{position = {-20, 20}})
 
 	}
 

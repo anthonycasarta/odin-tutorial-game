@@ -1,23 +1,25 @@
 package odin_tutorial_game
 
+import lvl "level"
+import p "player"
 import rl "vendor:raylib"
 
 level_paths := [?]string{"assets/levels/level_01.json"}
 
 
 Game :: struct {
-	player:              Player,
-	level:               Level,
+	player:              p.Player,
+	level:               lvl.Level,
 	current_level_index: int,
 	camera:              Game_Camera,
 	level_editor:        Level_Editor,
 }
 
 game_init :: proc() -> Game {
-	level: Level
-	level_load("assets/levels/level_01.json", &level)
+	level: lvl.Level
+	lvl.level_load("assets/levels/level_01.json", &level)
 	return Game {
-		player = player_init(),
+		player = p.player_init(),
 		level = level,
 		current_level_index = 0,
 		level_editor = Level_Editor{enabled = false},
@@ -25,8 +27,8 @@ game_init :: proc() -> Game {
 }
 
 game_destroy :: proc(game: ^Game) {
-	level_save(level_paths[game.current_level_index], &game.level)
-	level_destroy(&game.level)
+	lvl.level_save(level_paths[game.current_level_index], &game.level)
+	lvl.level_destroy(&game.level)
 
 }
 
@@ -39,7 +41,7 @@ game_level_change :: proc(game: ^Game, level_index: int) {
 	game_destroy(game)
 
 	level_path := level_paths[level_index]
-	level_load(level_path, &game.level)
+	lvl.level_load(level_path, &game.level)
 	game.current_level_index = level_index
 
 }
@@ -47,8 +49,8 @@ game_level_change :: proc(game: ^Game, level_index: int) {
 game_draw :: proc(game: ^Game) {
 	rl.BeginMode2D(game.camera.view)
 
-	player_draw(&game.player)
-	level_draw(&game.level)
+	p.player_draw(&game.player)
+	lvl.level_draw(&game.level)
 
 	level_editor_update(&game.level_editor, &game.level, &game.camera)
 
@@ -56,6 +58,6 @@ game_draw :: proc(game: ^Game) {
 }
 
 game_update :: proc(game: ^Game, delta_time: f32) {
-	player_update(&game.player, &game.level, delta_time)
+	p.player_update(&game.player, &game.level, delta_time)
 	camera_update(&game.player, &game.camera, &game.level)
 }

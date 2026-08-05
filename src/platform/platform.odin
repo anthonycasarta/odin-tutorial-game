@@ -1,4 +1,4 @@
-package odin_tutorial_game
+package platform
 
 import rl "vendor:raylib"
 

@@ -1,6 +1,6 @@
-package odin_tutorial_game
+package player
 
-import ps "player_states"
+import lvl "../level"
 import rl "vendor:raylib"
 
 Player :: struct {
@@ -16,7 +16,7 @@ Player :: struct {
 	sprite:          rl.Rectangle,
 	origin:          rl.Vector2,
 	ground_collider: rl.Rectangle,
-	state:           ps.Player_State,
+	state:           Player_State,
 	is_grounded:     bool,
 	is_dead:         bool,
 }
@@ -49,7 +49,7 @@ player_draw :: proc(player: ^Player) {
 
 }
 
-player_update :: proc(player: ^Player, level: ^Level, delta_time: f32) {
+player_update :: proc(player: ^Player, level: ^lvl.Level, delta_time: f32) {
 	player.left = player.position.x - (player.width / 2)
 	player.right = player.position.x + (player.width / 2)
 	player.bottom = player.position.y
@@ -100,7 +100,7 @@ player_update :: proc(player: ^Player, level: ^Level, delta_time: f32) {
 	player.is_grounded = false
 	for platform in level.platforms {
 
-		if rl.CheckCollisionRecs(player.ground_collider, platform_collider(platform)) &&
+		if rl.CheckCollisionRecs(player.ground_collider, lvl.platform_collider(platform)) &&
 		   player.velocity.y > 0 {
 			player.velocity.y = 0
 			player.position.y = platform.position.y

@@ -1,5 +1,7 @@
 package odin_tutorial_game
 
+import lvl "level"
+import p "player"
 import rl "vendor:raylib"
 
 Game_Camera :: struct {
@@ -8,7 +10,7 @@ Game_Camera :: struct {
 	shake:        f32,
 }
 
-camera_update :: proc(player: ^Player, camera: ^Game_Camera, level: ^Level) {
+camera_update :: proc(player: ^p.Player, camera: ^Game_Camera, level: ^lvl.Level) {
 	screen_width := f32(rl.GetScreenWidth())
 	screen_height := f32(rl.GetScreenHeight())
 	pixel_window_height := f32(180)

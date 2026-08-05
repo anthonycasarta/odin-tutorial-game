@@ -1,6 +1,7 @@
 package odin_tutorial_game
 
 import "core:math"
+import lvl "level"
 import rl "vendor:raylib"
 
 grid_size := f32(8)
@@ -16,7 +17,7 @@ get_snapped_position :: proc(world_coordinate: rl.Vector2) -> rl.Vector2 {
 	}
 }
 
-level_editor_update :: proc(level_editor: ^Level_Editor, level: ^Level, camera: ^Game_Camera) {
+level_editor_update :: proc(level_editor: ^Level_Editor, level: ^lvl.Level, camera: ^Game_Camera) {
 	if rl.IsKeyPressed(.F2) {
 		level_editor.enabled = !level_editor.enabled
 	}
@@ -28,10 +29,10 @@ level_editor_update :: proc(level_editor: ^Level_Editor, level: ^Level, camera: 
 		rl.DrawRectangleV(snapped_position, {96, 16}, rl.WHITE)
 
 		if rl.IsMouseButtonPressed(.LEFT) {
-			level_add_platform_at(level, snapped_position)
+			lvl.level_add_platform_at(level, snapped_position)
 		}
 		if rl.IsMouseButtonPressed(.RIGHT) {
-			level_remove_platform_at(level, snapped_position)
+			lvl.level_remove_platform_at(level, snapped_position)
 		}
 	}
 
