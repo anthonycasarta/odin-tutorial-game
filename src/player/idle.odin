@@ -18,7 +18,7 @@ idle_transition :: proc(player: ^Player) -> Player_State {
 	if abs(player.velocity.x) > 0 {
 		return Player_State.Run
 	}
-	if rl.IsKeyPressed(.SPACE) {
+	if player.velocity.y < 0 {
 		return Player_State.Jump
 	}
 	return Player_State.Idle
