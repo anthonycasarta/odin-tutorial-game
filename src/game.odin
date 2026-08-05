@@ -15,6 +15,19 @@ Game :: struct {
 	level_editor:        Level_Editor,
 }
 
+player_state_text :: proc(state: p.Player_State) -> cstring {
+	switch state {
+	case .Idle:
+		return "Idle"
+	case .Run:
+		return "Run"
+	case .Jump:
+		return "Jump"
+	case:
+		return "Unknown"
+	}
+}
+
 game_init :: proc() -> Game {
 	level: lvl.Level
 	lvl.level_load("assets/levels/level_01.json", &level)
@@ -54,7 +67,15 @@ game_draw :: proc(game: ^Game) {
 
 	level_editor_update(&game.level_editor, &game.level, &game.camera)
 
+	state_text := player_state_text(game.player.state)
+	font_size := i32(20)
+	text_width := rl.MeasureText(state_text, font_size)
+
+
 	rl.EndMode2D()
+
+	rl.DrawText(state_text, (rl.GetScreenWidth() - text_width) / 2, 10, font_size, rl.YELLOW)
+
 }
 
 game_update :: proc(game: ^Game, delta_time: f32) {

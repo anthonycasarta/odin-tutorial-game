@@ -26,6 +26,7 @@ player_init :: proc() -> Player {
 	speed := f32(100)
 	width := f32(8)
 	height := f32(8)
+	state := state_machine_init()
 
 	return Player {
 		position = position,
@@ -34,6 +35,7 @@ player_init :: proc() -> Player {
 		height = height,
 		sprite = {position.x, position.y, width, height},
 		origin = {width / 2, height},
+		state = state,
 	}
 }
 

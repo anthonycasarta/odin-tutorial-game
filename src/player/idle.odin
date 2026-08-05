@@ -15,7 +15,7 @@ idle_update :: proc(player: ^Player) {
 }
 
 idle_transition :: proc(player: ^Player) -> Player_State {
-	if player.velocity.x > 0 {
+	if abs(player.velocity.x) > 0 {
 		return Player_State.Run
 	}
 	if rl.IsKeyPressed(.SPACE) {
