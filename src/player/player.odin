@@ -87,9 +87,9 @@ player_update :: proc(player: ^Player, level: ^lvl.Level, delta_time: f32) {
 	}
 
 	// Jump
-	if player.is_grounded && rl.IsKeyPressed(.SPACE) {
-		// player.velocity.y = -300
-	}
+	// if player.is_grounded && rl.IsKeyPressed(.SPACE) {
+	// 	player.velocity.y = -300
+	// }
 
 	player.position += player.velocity * delta_time
 
@@ -106,7 +106,7 @@ player_update :: proc(player: ^Player, level: ^lvl.Level, delta_time: f32) {
 
 		if rl.CheckCollisionRecs(player.ground_collider, lvl.platform_collider(platform)) &&
 		   player.velocity.y > 0 {
-			player.velocity.y = 0
+			// player.velocity.y = 0
 			player.position.y = platform.position.y
 			player.is_grounded = true
 		}

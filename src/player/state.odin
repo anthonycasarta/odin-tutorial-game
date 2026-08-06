@@ -10,10 +10,12 @@ Player_State :: enum {
 }
 
 State_Functions :: struct {
-	parent:        Player_State,
-	initial_child: Player_State,
-	enter:         proc(player: ^Player),
-	exit:          proc(player: ^Player),
-	update:        proc(player: ^Player),
-	transition:    proc(player: ^Player) -> Player_State,
+	has_parent:        bool,
+	has_initial_child: bool,
+	parent:            Player_State,
+	initial_child:     Player_State,
+	enter:             proc(player: ^Player),
+	exit:              proc(player: ^Player),
+	update:            proc(player: ^Player),
+	transition:        proc(player: ^Player) -> Player_State,
 }

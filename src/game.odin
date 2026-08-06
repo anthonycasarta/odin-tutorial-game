@@ -75,14 +75,24 @@ game_draw :: proc(game: ^Game) {
 
 	state_stack_length := len(game.player.state) - 1
 	player_state := game.player.state[state_stack_length]
+
 	state_text := player_state_text(player_state)
+	parent_state_text := player_state_text(game.player.state[0])
+
 	font_size := i32(20)
 	text_width := rl.MeasureText(state_text, font_size)
-
+	parent_text_width := rl.MeasureText(parent_state_text, font_size)
 
 	rl.EndMode2D()
 
-	rl.DrawText(state_text, (rl.GetScreenWidth() - text_width) / 2, 10, font_size, rl.YELLOW)
+	rl.DrawText(
+		parent_state_text,
+		(rl.GetScreenWidth() - parent_text_width) / 2,
+		10,
+		font_size,
+		rl.GREEN,
+	)
+	rl.DrawText(state_text, (rl.GetScreenWidth() - text_width) / 2, 30, font_size, rl.YELLOW)
 
 }
 

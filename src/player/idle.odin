@@ -7,7 +7,6 @@ idle_enter :: proc(player: ^Player) {
 }
 
 idle_exit :: proc(player: ^Player) {
-	player.velocity.x = 0
 }
 
 idle_update :: proc(player: ^Player) {
