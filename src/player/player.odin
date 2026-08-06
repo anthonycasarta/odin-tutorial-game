@@ -16,7 +16,7 @@ Player :: struct {
 	sprite:          rl.Rectangle,
 	origin:          rl.Vector2,
 	ground_collider: rl.Rectangle,
-	state:           Player_State,
+	state:           [dynamic]Player_State,
 	is_grounded:     bool,
 	is_dead:         bool,
 }
@@ -88,7 +88,7 @@ player_update :: proc(player: ^Player, level: ^lvl.Level, delta_time: f32) {
 
 	// Jump
 	if player.is_grounded && rl.IsKeyPressed(.SPACE) {
-		player.velocity.y = -300
+		// player.velocity.y = -300
 	}
 
 	player.position += player.velocity * delta_time

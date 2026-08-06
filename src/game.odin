@@ -17,12 +17,18 @@ Game :: struct {
 
 player_state_text :: proc(state: p.Player_State) -> cstring {
 	switch state {
+	case .Grounded:
+		return "Grounded"
+	case .Aerial:
+		return "Aerial"
 	case .Idle:
 		return "Idle"
 	case .Run:
 		return "Run"
 	case .Jump:
 		return "Jump"
+	case .Fall:
+		return "Fall"
 	case:
 		return "Unknown"
 	}
@@ -67,7 +73,9 @@ game_draw :: proc(game: ^Game) {
 
 	level_editor_update(&game.level_editor, &game.level, &game.camera)
 
-	state_text := player_state_text(game.player.state)
+	state_stack_length := len(game.player.state) - 1
+	player_state := game.player.state[state_stack_length]
+	state_text := player_state_text(player_state)
 	font_size := i32(20)
 	text_width := rl.MeasureText(state_text, font_size)
 

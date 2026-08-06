@@ -1,6 +1,8 @@
 package player
 
-jump_enter :: proc(player: ^Player) {}
+jump_enter :: proc(player: ^Player) {
+	player.velocity.y = -300
+}
 
 jump_exit :: proc(player: ^Player) {
 	player.velocity.y = 0
