@@ -44,7 +44,7 @@ state_functions := [Player_State]State_Functions {
 	.Jump = {
 		has_parent = true,
 		has_initial_child = false,
-		parent = Player_State.Aerial,
+		parent = Player_State.Grounded,
 		initial_child = Player_State.Jump,
 		enter = jump_enter,
 		exit = jump_exit,
@@ -94,6 +94,11 @@ state_machine_update :: proc(player: ^Player) {
 		new_parent_state := state_functions[new_state].parent
 
 		if state != new_state {
+
+			if (state_functions[state].has_parent && state_functions[new_state].has_parent) &&
+			   (state_functions[state].parent != state_functions[new_state].parent) {
+				return
+			}
 			state_machine_transition(player, state, parent_state, new_state, new_parent_state)
 		}
 	}
